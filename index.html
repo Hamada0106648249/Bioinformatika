@@ -3,55 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bioinformatika — Concept Matching Game</title>
+  <title>Bioinformatika — Concept ↔ Explanation (Molecular Modeling)</title>
   <style>
-    :root{
-      --bg:#0f172a;
-      --card:#111827cc;
-      --accent:#22d3ee;
-      --accent2:#a78bfa;
-      --muted:#94a3b8;
-      --ok:#22c55e;
-      --bad:#ef4444;
-      --gold:#d4af37;
-      --shadow:0 20px 40px rgba(0,0,0,.35);
-      --radius:22px;
-    }
+    :root{--bg:#0f172a;--card:#0b1223;--border:#233046;--accent:#22d3ee;--accent2:#a78bfa;--muted:#94a3b8;--ok:#22c55e;--bad:#ef4444;--radius:22px;--shadow:0 20px 40px rgba(0,0,0,.35)}
     *{box-sizing:border-box}
-    body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial; background: radial-gradient(1200px 800px at 80% -10%, #1e293b 0, #0b1223 60%, #070d1a 100%), var(--bg); color:#e5e7eb; min-height:100dvh;}
-    header{max-width:1100px;margin:40px auto 10px;padding:0 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+    body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 800px at 80% -10%, #1e293b 0, #0b1223 60%, #070d1a 100%), var(--bg);color:#e5e7eb;min-height:100dvh}
+    header{max-width:1100px;margin:32px auto 8px;padding:0 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
     .brand{display:flex;gap:12px;align-items:center}
     .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow)}
     h1{font-size:clamp(20px,2.4vw,30px);margin:0}
     .sub{color:var(--muted);font-size:14px}
-    main{max-width:1100px;margin:0 auto;padding:20px}
-    .panel{background:linear-gradient(180deg, #0b1223 0%, #0a0f1d 100%); border:1px solid #1f2937; border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
-    .grid{display:grid;gap:14px;grid-template-columns:repeat(4, minmax(0,1fr));}
+    main{max-width:1100px;margin:0 auto;padding:18px}
+    .panel{background:linear-gradient(180deg,#0b1223 0%, #0a0f1d 100%);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(4, minmax(0,1fr))}
     @media (max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
     @media (max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
-    .card{
-      position:relative; aspect-ratio:3/4; border-radius:18px; border:1px solid #263041; overflow:hidden; cursor:pointer; transform-style:preserve-3d; transition:transform .5s ease;
-      background:#0c1426;
-    }
-    .card.flipped{ transform:rotateY(180deg) }
-    .face, .back{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:14px; text-align:center; backface-visibility:hidden}
-    .back{ background:linear-gradient(145deg,#0f1b35,#0a1326); color:#e5e7eb; letter-spacing:.12em; font-weight:600 }
-    .face{ transform:rotateY(180deg); background:var(--card); border:1px solid #293446}
-    .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-size:12px; opacity:.9}
-    .pill.red{ background:#7f1d1d33; border:1px solid #7f1d1d; color:#fecaca }
-    .pill.blue{ background:#0c4a6e33; border:1px solid #0c4a6e; color:#bae6fd }
-    .txt{font-size:clamp(13px,1.6vw,16px); line-height:1.35}
-    .hud{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px}
-    .hud .stats{display:flex; gap:12px; align-items:center}
-    .stat{background:#0b1223; border:1px solid #1f2937; padding:10px 12px; border-radius:12px; font-weight:600}
-    .btn{appearance:none; border:0; padding:12px 16px; border-radius:14px; font-weight:700; cursor:pointer; color:#0b1223; background:linear-gradient(135deg,var(--accent),var(--accent2)); box-shadow:var(--shadow)}
-    .btn.secondary{background:#0b1223; color:#e5e7eb; border:1px solid #263041}
-    .footer{margin-top:14px; color:var(--muted); font-size:13px}
-    dialog{border:0; border-radius:20px; padding:0; background:#0b1223; color:#e5e7eb; width:min(520px,92vw); box-shadow:var(--shadow)}
+    .card{position:relative;aspect-ratio:3/4;border-radius:18px;border:1px solid #263041;overflow:hidden;cursor:pointer;transform-style:preserve-3d;transition:transform .5s ease;background:#0c1426}
+    .card.flipped{transform:rotateY(180deg)}
+    .face,.back{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;backface-visibility:hidden}
+    .back{background:linear-gradient(145deg,#0f1b35,#0a1326);color:#e5e7eb;letter-spacing:.12em;font-weight:700}
+    .face{transform:rotateY(180deg);background:var(--card);border:1px solid #293446}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-size:12px;opacity:.95;margin-bottom:8px}
+    .pill.red{background:#7f1d1d33;border:1px solid #7f1d1d;color:#fecaca}
+    .pill.blue{background:#0c4a6e33;border:1px solid #0c4a6e;color:#bae6fd}
+    .txt{font-size:clamp(13px,1.6vw,16px);line-height:1.4}
+    .hud{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .stat{background:#0b1223;border:1px solid var(--border);padding:10px 12px;border-radius:12px;font-weight:700}
+    .btn{appearance:none;border:0;padding:12px 16px;border-radius:14px;font-weight:800;cursor:pointer;color:#0b1223;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow)}
+    .btn.secondary{background:#0b1223;color:#e5e7eb;border:1px solid #263041}
+    dialog{border:0;border-radius:20px;padding:0;background:#0b1223;color:#e5e7eb;width:min(520px,92vw);box-shadow:var(--shadow)}
     .dlg{padding:22px}
-    .trophy{font-size:38px}
-    .gold{color:var(--gold)}
-    .sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
   </style>
 </head>
 <body>
@@ -59,81 +40,69 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>Bioinformatika — Concept Matching Game</h1>
-        <div class="sub">Match <b>Concept</b> cards with their correct <b>Explanation</b>. Topic: <b>Molecular Modeling & Computational Biology</b>. Fewer turns = higher score.</div>
+        <h1>Bioinformatika — Concept ↔ Explanation</h1>
+        <div class="sub">Topic: <b>Molecular Modeling & Computational Biology</b>. Group label: <b>Concept explanation</b>. Flip a <b>Concept</b> (red) and match it to the correct <b>Explanation</b> (blue).</div>
       </div>
     </div>
-    <div>
-      <button class="btn" id="newGameBtn">New Game</button>
-    </div>
+    <button class="btn" id="newGameBtn">New Game</button>
   </header>
 
   <main>
     <div class="panel hud" role="status" aria-live="polite">
-      <div class="stats">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         <div class="stat">Turns: <span id="turns">0</span></div>
         <div class="stat">Pairs: <span id="pairs">0</span>/<span id="total">0</span></div>
         <div class="stat">Best: <span id="best">—</span></div>
       </div>
-      <div>
-        <button class="btn secondary" id="howBtn">How to Play</button>
-      </div>
+      <button class="btn secondary" id="howBtn">How to Play</button>
     </div>
 
     <section class="panel">
       <div id="grid" class="grid" aria-label="Game board"></div>
-      <div class="footer">Tip: Edit the <code>DATA</code> array below to create your own concept-explanation pairs.</div>
+      <div style="color:#94a3b8;font-size:13px;margin-top:8px">Tip: Edit the <code>PAIRS</code> array in the source to change or add concepts.</div>
     </section>
   </main>
 
-  <dialog id="howDlg">
-    <div class="dlg">
-      <h2>How to Play</h2>
-      <p>Red cards are <b>Concepts</b>. Blue cards contain the <b>Explanation</b>. Flip two cards to find a correct pair. Correct matches remain visible.</p>
-      <ul>
-        <li><b>Turns</b> count every two flips.</li>
-        <li><b>Best</b> is saved locally per device.</li>
-      </ul>
-      <p style="margin-top:10px"><button class="btn" id="closeHow">Got it</button></p>
-    </div>
-  </dialog>
+  <dialog id="howDlg"><div class="dlg">
+    <h2>How to Play</h2>
+    <p>Cards are split into two groups labeled <b>Concept explanation</b>: red cards (Concept) and blue cards (Explanation). Find matching pairs. Matched cards stay face-up.</p>
+    <p><button class="btn" id="closeHow">Got it</button></p>
+  </div></dialog>
 
-  <dialog id="winDlg">
-    <div class="dlg" style="text-align:center">
-      <div class="trophy">🎉 <span class="gold">Congratulations!</span></div>
-      <p>You matched all concept–explanation pairs in <b><span id="finalTurns">0</span> turns</b>.</p>
-      <p><em>Great job — keep going, you are mastering the material!</em></p>
-      <p><button class="btn" id="againBtn">Play Again</button></p>
-    </div>
-  </dialog>
+  <dialog id="winDlg"><div class="dlg" style="text-align:center">
+    <div style="font-size:38px">🏅 <b>Congratulations!</b></div>
+    <p>You matched all pairs in <b><span id="finalTurns">0</span> turns</b>.</p>
+    <p><b>Bioinformatika:</b> Excellent effort—keep going, your mastery is growing!</p>
+    <p><button class="btn" id="againBtn">Play Again</button></p>
+  </div></dialog>
 
   <script>
-    // ======== CONTENT ========
-    const DATA = [
-      { front: "RMSD (Root-Mean-Square Deviation)", back: "Measures average displacement of a structure from a reference over time; used to assess MD stability" },
-      { front: "RMSF (Root-Mean-Square Fluctuation)", back: "Per-residue flexibility metric across a trajectory; highlights mobile vs rigid regions" },
-      { front: "Radius of gyration (Rg)", back: "Mass-weighted compactness of a molecule; lower Rg often indicates compaction" },
-      { front: "Hydrogen-bond analysis", back: "Counts/persistence of donor–acceptor H-bonds; supports binding stability interpretation" },
-      { front: "SASA (Solvent Accessible Surface Area)", back: "Surface area accessible to solvent probe; relates to burial/exposure during folding or binding" },
-      { front: "MM/PBSA or MM/GBSA", back: "End-point free energy estimates from MD snapshots; approximates binding free energy (ΔGbind)" },
-      { front: "Docking score", back: "Empirical/knowledge-based scoring proxy for affinity; useful for ranking but not absolute ΔG" },
-      { front: "Docking pose", back: "Predicted ligand orientation within binding site; validated by interactions and MD" },
-      { front: "Force field (e.g., AMBER/CHARMM)", back: "Parameterized functional form describing bonded and nonbonded interactions in simulations" },
-      { front: "Water model (e.g., TIP3P)", back: "Simplified representation of water with fixed geometry and charges for MD" },
-      { front: "PME (Particle Mesh Ewald)", back: "Algorithm to compute long-range electrostatics efficiently with periodic boundary conditions" },
-      { front: "Periodic boundary conditions (PBC)", back: "Simulate a small box as if tiled infinitely to avoid edge artifacts" },
-      { front: "Cutoff distance", back: "Real-space truncation for nonbonded interactions before reciprocal-space treatment" },
-      { front: "Thermostat (e.g., Langevin)", back: "Controls system temperature by coupling to a heat bath" },
-      { front: "Barostat (e.g., Parrinello–Rahman)", back: "Controls system pressure to sample NPT ensemble" },
-      { front: "Equilibration vs Production", back: "Initial relaxation of system to target T/P, then data collection with stable properties" },
-      { front: "Convergence check", back: "Assess whether observables (RMSD, energy) plateau and results no longer drift" },
-      { front: "Principal Component Analysis (PCA)", back: "Reduces trajectory to dominant collective motions (eigenvectors/eigenvalues)" },
-      { front: "Free Energy Landscape (FEL)", back: "Maps states via reaction coordinates (e.g., PC1/PC2) to identify basins/minima" },
-      { front: "Clustering of MD frames", back: "Groups similar conformations to find representative states and populations" }
+    // ======== CONTENT: concept ↔ explanation pairs ========
+    const PAIRS = [
+      ["RMSD (Root-Mean-Square Deviation)", "Average displacement from a reference across time; common stability check for MD"],
+      ["RMSF (Root-Mean-Square Fluctuation)", "Per-residue motion across a trajectory; highlights flexible/rigid segments"],
+      ["Radius of gyration (Rg)", "Mass-weighted compactness metric; lower Rg suggests compaction"],
+      ["Hydrogen-bond analysis", "Number/persistence of H-bonds over time; supports binding stability"],
+      ["SASA (Solvent Accessible Surface Area)", "Area accessible to solvent probe; relates to exposure/burial during folding/binding"],
+      ["MM/PBSA (or MM/GBSA)", "End-point method estimating ΔG_bind from MD snapshots; approximate ranking, not absolute"],
+      ["Docking score", "Empirical/knowledge-based proxy for affinity; useful for ranking but not true ΔG"],
+      ["Docking pose validation", "Check key interactions and run short MD to assess pose stability"],
+      ["Force field (AMBER/CHARMM)", "Parameterized potentials for bonded/nonbonded terms used in MD"],
+      ["Water model (TIP3P, etc.)", "Fixed-geometry model for solvent with set charges; affects dynamics/energetics"],
+      ["PME (Particle Mesh Ewald)", "Efficient long-range electrostatics algorithm under PBC"],
+      ["Periodic boundary conditions (PBC)", "Tile the box infinitely to limit edge artifacts"],
+      ["Cutoff distance", "Real-space truncation for nonbonded terms before reciprocal-space treatment"],
+      ["Thermostat (e.g., Langevin)", "Controls temperature by coupling to a heat bath"],
+      ["Barostat (e.g., Parrinello–Rahman)", "Controls pressure to sample the NPT ensemble"],
+      ["Equilibration vs Production", "Relax system (equilibration), then collect data (production) when properties stabilize"],
+      ["Convergence checks", "Ensure observables plateau and no systematic drift remains"],
+      ["PCA (Essential Dynamics)", "Extract dominant collective motions (eigenvectors/eigenvalues)"],
+      ["Free Energy Landscape (FEL)", "Project states on reaction coordinates (e.g., PC1/PC2) to locate minima"],
+      ["Clustering MD frames", "Group conformations to identify representative states and populations"]
     ];
 
-    // ======== Engine ========
-    const el = sel => document.querySelector(sel);
+    // ======== ENGINE ========
+    const el = s => document.querySelector(s);
     const grid = el('#grid');
     const turnsEl = el('#turns');
     const pairsEl = el('#pairs');
@@ -142,87 +111,80 @@
     const winDlg = el('#winDlg');
     const howDlg = el('#howDlg');
 
-    let first=null, lock=false, turns=0, pairs=0, total=DATA.length;
+    let first=null, lock=false, turns=0, pairs=0, total=PAIRS.length;
 
-    function saveBest(v){ localStorage.setItem('bioinformatika_best', v) }
-    function getBest(){ return localStorage.getItem('bioinformatika_best') }
-
+    function saveBest(v){ localStorage.setItem('bioinf_game_best', v) }
+    function getBest(){ return localStorage.getItem('bioinf_game_best') }
     function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
 
-    function newDeck(){
+    function buildDeck(){
       const deck=[];
-      DATA.forEach((item,i)=>{
-        deck.push({ id:`${i}-A`, pair:i, color:'red', text:item.front });
-        deck.push({ id:`${i}-B`, pair:i, color:'blue', text:item.back });
+      PAIRS.forEach((p,i)=>{
+        const [concept, explanation]=p;
+        deck.push({ id:`${i}-C`, pair:i, kind:'concept', color:'red', text:concept });
+        deck.push({ id:`${i}-E`, pair:i, kind:'explanation', color:'blue', text:explanation });
       });
       return shuffle(deck);
     }
 
     function render(){
       grid.innerHTML='';
-      const deck = newDeck();
-      total=DATA.length; pairs=0; turns=0; first=null; lock=false;
-      turnsEl.textContent=turns; pairsEl.textContent=pairs; totalEl.textContent=total;
+      const deck = buildDeck();
+      total = PAIRS.length; pairs=0; turns=0; first=null; lock=false;
+      turnsEl.textContent=turns; pairsEl.textContent=pairs; totalEl.textContent=total; bestEl.textContent=getBest()||'—';
 
       deck.forEach(card=>{
         const c=document.createElement('button');
-        c.className='card'; c.setAttribute('aria-label','Card'); c.dataset.pair=card.pair; c.dataset.color=card.color;
+        c.className='card';
+        c.setAttribute('aria-label','Card');
+        c.dataset.pair=card.pair; c.dataset.color=card.color; c.dataset.kind=card.kind;
         c.innerHTML = `
-          <div class="back">Bio<span style="color:var(--accent)">informatika</span></div>
+          <div class="back">Bioinformatika</div>
           <div class="face">
             <div>
-              <div class="pill ${card.color==='red'?'red':'blue'}">${card.color==='red'?'Concept':'Explanation'}</div>
+              <div class="pill ${card.color==='red'?'red':'blue'}">${card.kind==='concept'?'Concept':'Explanation'}</div>
               <div class="txt">${card.text}</div>
             </div>
           </div>`;
         c.addEventListener('click', ()=> onFlip(c));
         grid.appendChild(c);
       });
-
-      const best=getBest();
-      bestEl.textContent = best? best : '—';
     }
 
     function onFlip(card){
       if(lock || card.classList.contains('flipped')) return;
       card.classList.add('flipped');
       if(!first){ first=card; return; }
-      turns++; turnsEl.textContent=turns;
-      lock=true;
+      turns++; turnsEl.textContent=turns; lock=true;
       const match = first.dataset.pair===card.dataset.pair && first!==card;
       if(match){
-        pairs++; pairsEl.textContent=pairs;
+        // keep face-up and disable
         setTimeout(()=>{
-          // Keep matched cards face-up and disable further clicks
           first.style.pointerEvents='none';
           card.style.pointerEvents='none';
-          first=null; lock=false; maybeWin();
-        }, 420);
+          first=null; lock=false; pairs++; pairsEl.textContent=pairs; maybeWin();
+        }, 350);
       }else{
-        setTimeout(()=>{
-          first.classList.remove('flipped');
-          card.classList.remove('flipped');
-          first=null; lock=false;
-        }, 700);
+        setTimeout(()=>{ first.classList.remove('flipped'); card.classList.remove('flipped'); first=null; lock=false; }, 800);
       }
     }
 
     function maybeWin(){
       if(pairs===total){
         el('#finalTurns').textContent = turns;
-        const best=getBest();
-        if(!best || turns < +best){ saveBest(turns) }
+        const best=getBest(); if(!best || turns < +best){ saveBest(turns) }
         winDlg.showModal();
       }
     }
 
+    // UI hooks
     el('#newGameBtn').addEventListener('click', render);
-    el('#againBtn').addEventListener('click', ()=>{ winDlg.close(); render(); });
+    el('#againBtn')?.addEventListener('click', ()=>{ winDlg.close(); render(); });
     el('#howBtn').addEventListener('click', ()=> howDlg.showModal());
     el('#closeHow').addEventListener('click', ()=> howDlg.close());
+    window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='r') render(); if(e.key.toLowerCase()==='h') (howDlg.open?howDlg.close():howDlg.showModal()); });
 
     render();
   </script>
 </body>
 </html>
-
