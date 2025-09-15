@@ -158,7 +158,6 @@
       turns++; turnsEl.textContent=turns; lock=true;
       const match = first.dataset.pair===card.dataset.pair && first!==card;
       if(match){
-        // keep face-up and disable
         setTimeout(()=>{
           first.style.pointerEvents='none';
           card.style.pointerEvents='none';
