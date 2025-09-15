@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PharmGame — Diuretics Match</title>
+  <style>
+    :root{
+      --bg:#0f172a;/* slate-900 */
+      --card:#111827cc;/* gray-900/80 */
+      --accent:#22d3ee;/* cyan-400 */
+      --accent2:#a78bfa;/* violet-400 */
+      --muted:#94a3b8;/* slate-400 */
+      --ok:#22c55e;/* green-500 */
+      --bad:#ef4444;/* red-500 */
+      --gold:#d4af37;
+      --shadow:0 20px 40px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial; background: radial-gradient(1200px 800px at 80% -10%, #1e293b 0, #0b1223 60%, #070d1a 100%), var(--bg); color:#e5e7eb; min-height:100dvh;}
+    header{max-width:1100px;margin:40px auto 10px;padding:0 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow)}
+    h1{font-size:clamp(20px,2.4vw,30px);margin:0}
+    .sub{color:var(--muted);font-size:14px}
+    main{max-width:1100px;margin:0 auto;padding:20px}
+    .panel{background:linear-gradient(180deg, #0b1223 0%, #0a0f1d 100%); border:1px solid #1f2937; border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(4, minmax(0,1fr));}
+    @media (max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+    .card{
+      position:relative; aspect-ratio:3/4; border-radius:18px; border:1px solid #263041; overflow:hidden; cursor:pointer; transform-style:preserve-3d; transition:transform .5s ease;
+      background:#0c1426;
+    }
+    .card.flipped{ transform:rotateY(180deg) }
+    .face, .back{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:14px; text-align:center; backface-visibility:hidden}
+    .back{ background:linear-gradient(145deg,#0f1b35,#0a1326); color:#e5e7eb; letter-spacing:.12em; font-weight:600 }
+    .face{ transform:rotateY(180deg); background:var(--card); border:1px solid #293446}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-size:12px; opacity:.9}
+    .pill.red{ background:#7f1d1d33; border:1px solid #7f1d1d; color:#fecaca }
+    .pill.blue{ background:#0c4a6e33; border:1px solid #0c4a6e; color:#bae6fd }
+    .txt{font-size:clamp(13px,1.6vw,16px); line-height:1.35}
+    .hud{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px}
+    .hud .stats{display:flex; gap:12px; align-items:center}
+    .stat{background:#0b1223; border:1px solid #1f2937; padding:10px 12px; border-radius:12px; font-weight:600}
+    .btn{appearance:none; border:0; padding:12px 16px; border-radius:14px; font-weight:700; cursor:pointer; color:#0b1223; background:linear-gradient(135deg,var(--accent),var(--accent2)); box-shadow:var(--shadow)}
+    .btn.secondary{background:#0b1223; color:#e5e7eb; border:1px solid #263041}
+    .footer{margin-top:14px; color:var(--muted); font-size:13px}
+    dialog{border:0; border-radius:20px; padding:0; background:#0b1223; color:#e5e7eb; width:min(520px,92vw); box-shadow:var(--shadow)}
+    .dlg{padding:22px}
+    .trophy{font-size:38px}
+    .gold{color:var(--gold)}
+    .sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>PharmGame — Diuretics Quest</h1>
+        <div class="sub">Match <b>drug/class</b> cards with their correct <b>MOA / use / adverse effect</b>. Fewer turns = higher score.</div>
+      </div>
+    </div>
+    <div>
+      <button class="btn" id="newGameBtn">New Game</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="panel hud" role="status" aria-live="polite">
+      <div class="stats">
+        <div class="stat">Turns: <span id="turns">0</span></div>
+        <div class="stat">Pairs: <span id="pairs">0</span>/<span id="total">0</span></div>
+        <div class="stat">Best: <span id="best">—</span></div>
+      </div>
+      <div>
+        <button class="btn secondary" id="howBtn">How to Play</button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div id="grid" class="grid" aria-label="Game board"></div>
+      <div class="footer">Tip: Use this template for any topic (e.g., antimicrobials, autonomics). Edit the <code>DATA</code> array below only.</div>
+    </section>
+  </main>
+
+  <dialog id="howDlg">
+    <div class="dlg">
+      <h2>How to Play</h2>
+      <p>Red cards are <b>drug names or classes</b>. Blue cards describe a <b>mechanism, use, or adverse effect</b>. Flip two cards to find a correct pair. All sets are randomized each game.</p>
+      <ul>
+        <li><b>Turns</b> count every two flips.</li>
+        <li><b>Best</b> is saved locally per device.</li>
+        <li>Keyboard: <kbd>R</kbd> to restart, <kbd>H</kbd> for help.</li>
+      </ul>
+      <p style="margin-top:10px"><button class="btn" id="closeHow">Got it</button></p>
+    </div>
+  </dialog>
+
+  <dialog id="winDlg">
+    <div class="dlg" style="text-align:center">
+      <div class="trophy">🏅 <span class="gold">Excellent!</span></div>
+      <p>You matched all pairs in <b><span id="finalTurns">0</span> turns</b>.</p>
+      <p><button class="btn" id="againBtn">Play Again</button></p>
+    </div>
+  </dialog>
+
+  <script>
+    // ======== CONTENT (Edit me) ========
+    // Each item becomes ONE pair: {front: "red card", back: "blue card"}
+    const DATA = [
+      { front: "Loop diuretics (e.g., Furosemide)", back: "Inhibit NKCC2 in thick ascending limb → ↑ Na⁺/K⁺/Cl⁻ excretion; AE: ototoxicity, hypokalemic alkalosis" },
+      { front: "Thiazides (e.g., Hydrochlorothiazide)", back: "Inhibit NCC in distal convoluted tubule; ↑ Ca²⁺ reabsorption; use: HTN, nephrogenic DI" },
+      { front: "Potassium-sparing: Spironolactone", back: "Aldosterone receptor antagonist in collecting duct; AE: gynecomastia, hyperkalemia" },
+      { front: "Potassium-sparing: Amiloride", back: "ENaC blocker in collecting duct; use: lithium-induced DI; AE: hyperkalemia" },
+      { front: "Carbonic anhydrase inhibitor (Acetazolamide)", back: "↓ HCO₃⁻ reabsorption in PCT; use: glaucoma, altitude sickness; AE: metabolic acidosis" },
+      { front: "Osmotic diuretic (Mannitol)", back: "Osmotically holds water in tubule; use: ↑ ICP/IOP; CI: CHF, pulmonary edema" },
+      { front: "Vaptans (Tolvaptan)", back: "V₂ receptor antagonist → aquaresis; use: SIADH; monitor liver toxicity" },
+      { front: "Ethacrynic acid", back: "Loop-like (no sulfa) for sulfa allergy; higher ototoxicity risk" }
+    ];
+
+    // ======== Engine (No need to edit below) ========
+    const el = sel => document.querySelector(sel);
+    const grid = el('#grid');
+    const turnsEl = el('#turns');
+    const pairsEl = el('#pairs');
+    const totalEl = el('#total');
+    const bestEl = el('#best');
+    const winDlg = el('#winDlg');
+    const howDlg = el('#howDlg');
+
+    let first=null, lock=false, turns=0, pairs=0, total=DATA.length;
+
+    function saveBest(v){ localStorage.setItem('pharmgame_best', v) }
+    function getBest(){ return localStorage.getItem('pharmgame_best') }
+
+    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
+
+    function newDeck(){
+      const deck=[];
+      DATA.forEach((item,i)=>{
+        deck.push({ id:`${i}-A`, pair:i, color:'red', text:item.front });
+        deck.push({ id:`${i}-B`, pair:i, color:'blue', text:item.back });
+      });
+      return shuffle(deck);
+    }
+
+    function render(){
+      grid.innerHTML='';
+      const deck = newDeck();
+      total=DATA.length; pairs=0; turns=0; first=null; lock=false;
+      turnsEl.textContent=turns; pairsEl.textContent=pairs; totalEl.textContent=total;
+
+      deck.forEach(card=>{
+        const c=document.createElement('button');
+        c.className='card'; c.setAttribute('aria-label','Card'); c.dataset.pair=card.pair; c.dataset.color=card.color;
+        c.innerHTML = `
+          <div class="back">Pharm<span style="color:var(--accent)">Game</span></div>
+          <div class="face">
+            <div>
+              <div class="pill ${card.color==='red'?'red':'blue'}">${card.color==='red'?'Drug/Class':'MOA/Use/AE'}</div>
+              <div class="txt">${card.text}</div>
+            </div>
+          </div>`;
+        c.addEventListener('click', ()=> onFlip(c));
+        grid.appendChild(c);
+      });
+
+      const best=getBest();
+      bestEl.textContent = best? best : '—';
+    }
+
+    function onFlip(card){
+      if(lock || card.classList.contains('flipped')) return;
+      card.classList.add('flipped');
+      if(!first){ first=card; return; }
+      // second flip
+      turns++; turnsEl.textContent=turns;
+      lock=true;
+      const match = first.dataset.pair===card.dataset.pair && first!==card;
+      if(match){
+        pairs++; pairsEl.textContent=pairs;
+        setTimeout(()=>{
+          first.style.visibility='hidden';
+          card.style.visibility='hidden';
+          first=null; lock=false; maybeWin();
+        }, 420);
+      }else{
+        setTimeout(()=>{
+          first.classList.remove('flipped');
+          card.classList.remove('flipped');
+          first=null; lock=false;
+        }, 700);
+      }
+    }
+
+    function maybeWin(){
+      if(pairs===total){
+        el('#finalTurns').textContent = turns;
+        const best=getBest();
+        if(!best || turns < +best){ saveBest(turns) }
+        winDlg.showModal();
+      }
+    }
+
+    // UI hooks
+    el('#newGameBtn').addEventListener('click', render);
+    el('#againBtn').addEventListener('click', ()=>{ winDlg.close(); render(); });
+    el('#howBtn').addEventListener('click', ()=> howDlg.showModal());
+    el('#closeHow').addEventListener('click', ()=> howDlg.close());
+    window.addEventListener('keydown', e=>{
+      if(e.key.toLowerCase()==='r') render();
+      if(e.key.toLowerCase()==='h') howDlg.open? howDlg.close(): howDlg.showModal();
+    });
+
+    // Kick-off
+    render();
+  </script>
+
+  <!--
+  =====================
+  Deployment (GitHub Pages)
+  1) Create a new public repo, e.g., pharmgame-diuretics
+  2) Add this file as index.html and commit
+  3) In repo Settings → Pages → Source = main branch (/(root)) → Save
+  4) Your site will be live at: https://<username>.github.io/pharmgame-diuretics
+  Edit the DATA array to change topics (ACE inhibitors, autonomics, etc.)
+  =====================
+  -->
+</body>
+</html>
