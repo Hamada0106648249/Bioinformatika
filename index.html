@@ -1,189 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bioinformatika — Concept ↔ Explanation (Molecular Modeling)</title>
-  <style>
-    :root{--bg:#0f172a;--card:#0b1223;--border:#233046;--accent:#22d3ee;--accent2:#a78bfa;--muted:#94a3b8;--ok:#22c55e;--bad:#ef4444;--radius:22px;--shadow:0 20px 40px rgba(0,0,0,.35)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 800px at 80% -10%, #1e293b 0, #0b1223 60%, #070d1a 100%), var(--bg);color:#e5e7eb;min-height:100dvh}
-    header{max-width:1100px;margin:32px auto 8px;padding:0 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow)}
-    h1{font-size:clamp(20px,2.4vw,30px);margin:0}
-    .sub{color:var(--muted);font-size:14px}
-    main{max-width:1100px;margin:0 auto;padding:18px}
-    .panel{background:linear-gradient(180deg,#0b1223 0%, #0a0f1d 100%);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    .grid{display:grid;gap:14px;grid-template-columns:repeat(4, minmax(0,1fr))}
-    @media (max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
-    @media (max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
-    .card{position:relative;aspect-ratio:3/4;border-radius:18px;border:1px solid #263041;overflow:hidden;cursor:pointer;transform-style:preserve-3d;transition:transform .5s ease;background:#0c1426}
-    .card.flipped{transform:rotateY(180deg)}
-    .face,.back{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;backface-visibility:hidden}
-    .back{background:linear-gradient(145deg,#0f1b35,#0a1326);color:#e5e7eb;letter-spacing:.12em;font-weight:700}
-    .face{transform:rotateY(180deg);background:var(--card);border:1px solid #293446}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-size:12px;opacity:.95;margin-bottom:8px}
-    .pill.red{background:#7f1d1d33;border:1px solid #7f1d1d;color:#fecaca}
-    .pill.blue{background:#0c4a6e33;border:1px solid #0c4a6e;color:#bae6fd}
-    .txt{font-size:clamp(13px,1.6vw,16px);line-height:1.4}
-    .hud{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
-    .stat{background:#0b1223;border:1px solid var(--border);padding:10px 12px;border-radius:12px;font-weight:700}
-    .btn{appearance:none;border:0;padding:12px 16px;border-radius:14px;font-weight:800;cursor:pointer;color:#0b1223;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow)}
-    .btn.secondary{background:#0b1223;color:#e5e7eb;border:1px solid #263041}
-    dialog{border:0;border-radius:20px;padding:0;background:#0b1223;color:#e5e7eb;width:min(520px,92vw);box-shadow:var(--shadow)}
-    .dlg{padding:22px}
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bioinformatika — Concept ↔ Explanation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; }
+        .perspective-container { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform .6s; transform-style: preserve-3d; transform: rotateY(180deg); }
+        .card.flipped .card-inner { transform: rotateY(0deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display:flex; align-items:center; justify-content:center; text-align:center; padding:1rem; border-radius:.75rem; box-shadow:0 4px 6px rgba(0,0,0,.1); }
+        .card-back { transform: rotateY(180deg); }
+        .matched { opacity:.9; transform: scale(0.98); transition: opacity .3s, transform .3s; }
+        .pill { display:inline-block; font-size:.75rem; font-weight:700; padding:.25rem .5rem; border-radius:999px; margin-bottom:.5rem }
+        .pill-red { background:#fecaca; color:#7f1d1d; border:1px solid #ef4444 }
+        .pill-blue { background:#bae6fd; color:#0c4a6e; border:1px solid #38bdf8 }
+        .trophy-gold { color:#FFD700 } .trophy-silver{ color:#C0C0C0 } .trophy-bronze{ color:#CD7F32 }
+    </style>
 </head>
-<body>
-  <header>
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div>
-        <h1>Bioinformatika — Concept ↔ Explanation</h1>
-        <div class="sub">Topic: <b>Molecular Modeling & Computational Biology</b>. Group label: <b>Concept explanation</b>. Flip a <b>Concept</b> (red) and match it to the correct <b>Explanation</b> (blue).</div>
-      </div>
-    </div>
-    <button class="btn" id="newGameBtn">New Game</button>
-  </header>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
 
-  <main>
-    <div class="panel hud" role="status" aria-live="polite">
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <div class="stat">Turns: <span id="turns">0</span></div>
-        <div class="stat">Pairs: <span id="pairs">0</span>/<span id="total">0</span></div>
-        <div class="stat">Best: <span id="best">—</span></div>
-      </div>
-      <button class="btn secondary" id="howBtn">How to Play</button>
+    <!-- Start Screen -->
+    <div id="start-screen" class="w-full max-w-2xl text-center p-8 bg-white rounded-2xl shadow-xl">
+        <h1 class="text-5xl font-bold text-slate-800 mb-2">Bioinformatika — Concept ↔ Explanation</h1>
+        <p class="text-slate-600 mb-8">Molecular Modeling & Computational Biology</p>
+        <p class="absolute top-4 right-6 text-lg font-semibold text-slate-500">Bioinformatika</p>
+
+        <div class="text-left max-w-lg mx-auto mb-8 space-y-4 text-slate-700">
+            <p><strong class="font-semibold text-red-600">Red Cards (Concept):</strong> RMSD, RMSF, Docking, MD terms, etc.</p>
+            <p><strong class="font-semibold text-blue-600">Blue Cards (Explanation):</strong> The correct definition or interpretation.</p>
+            <p><strong>Group:</strong> <em>Concept explanation</em>. Match the concept to its correct explanation. Fewer turns = better score!</p>
+        </div>
+
+        <button id="start-game-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-transform transform hover:scale-105 shadow-lg">
+            Start Game
+        </button>
     </div>
 
-    <section class="panel">
-      <div id="grid" class="grid" aria-label="Game board"></div>
-      <div style="color:#94a3b8;font-size:13px;margin-top:8px">Tip: Edit the <code>PAIRS</code> array in the source to change or add concepts.</div>
-    </section>
-  </main>
+    <!-- Game Container -->
+    <div id="game-container" class="w-full max-w-5xl mx-auto hidden">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-800">Bioinformatika — Concept ↔ Explanation</h1>
+            <p class="text-xl font-semibold text-slate-500">Bioinformatika</p>
+        </header>
 
-  <dialog id="howDlg"><div class="dlg">
-    <h2>How to Play</h2>
-    <p>Cards are split into two groups labeled <b>Concept explanation</b>: red cards (Concept) and blue cards (Explanation). Find matching pairs. Matched cards stay face-up.</p>
-    <p><button class="btn" id="closeHow">Got it</button></p>
-  </div></dialog>
-
-  <dialog id="winDlg"><div class="dlg" style="text-align:center">
-    <div style="font-size:38px">🏅 <b>Congratulations!</b></div>
-    <p>You matched all pairs in <b><span id="finalTurns">0</span> turns</b>.</p>
-    <p><b>Bioinformatika:</b> Excellent effort—keep going, your mastery is growing!</p>
-    <p><button class="btn" id="againBtn">Play Again</button></p>
-  </div></dialog>
-
-  <script>
-    // ======== CONTENT: concept ↔ explanation pairs ========
-    const PAIRS = [
-      ["RMSD (Root-Mean-Square Deviation)", "Average displacement from a reference across time; common stability check for MD"],
-      ["RMSF (Root-Mean-Square Fluctuation)", "Per-residue motion across a trajectory; highlights flexible/rigid segments"],
-      ["Radius of gyration (Rg)", "Mass-weighted compactness metric; lower Rg suggests compaction"],
-      ["Hydrogen-bond analysis", "Number/persistence of H-bonds over time; supports binding stability"],
-      ["SASA (Solvent Accessible Surface Area)", "Area accessible to solvent probe; relates to exposure/burial during folding/binding"],
-      ["MM/PBSA (or MM/GBSA)", "End-point method estimating ΔG_bind from MD snapshots; approximate ranking, not absolute"],
-      ["Docking score", "Empirical/knowledge-based proxy for affinity; useful for ranking but not true ΔG"],
-      ["Docking pose validation", "Check key interactions and run short MD to assess pose stability"],
-      ["Force field (AMBER/CHARMM)", "Parameterized potentials for bonded/nonbonded terms used in MD"],
-      ["Water model (TIP3P, etc.)", "Fixed-geometry model for solvent with set charges; affects dynamics/energetics"],
-      ["PME (Particle Mesh Ewald)", "Efficient long-range electrostatics algorithm under PBC"],
-      ["Periodic boundary conditions (PBC)", "Tile the box infinitely to limit edge artifacts"],
-      ["Cutoff distance", "Real-space truncation for nonbonded terms before reciprocal-space treatment"],
-      ["Thermostat (e.g., Langevin)", "Controls temperature by coupling to a heat bath"],
-      ["Barostat (e.g., Parrinello–Rahman)", "Controls pressure to sample the NPT ensemble"],
-      ["Equilibration vs Production", "Relax system (equilibration), then collect data (production) when properties stabilize"],
-      ["Convergence checks", "Ensure observables plateau and no systematic drift remains"],
-      ["PCA (Essential Dynamics)", "Extract dominant collective motions (eigenvectors/eigenvalues)"],
-      ["Free Energy Landscape (FEL)", "Project states on reaction coordinates (e.g., PC1/PC2) to locate minima"],
-      ["Clustering MD frames", "Group conformations to identify representative states and populations"]
-    ];
-
-    // ======== ENGINE ========
-    const el = s => document.querySelector(s);
-    const grid = el('#grid');
-    const turnsEl = el('#turns');
-    const pairsEl = el('#pairs');
-    const totalEl = el('#total');
-    const bestEl = el('#best');
-    const winDlg = el('#winDlg');
-    const howDlg = el('#howDlg');
-
-    let first=null, lock=false, turns=0, pairs=0, total=PAIRS.length;
-
-    function saveBest(v){ localStorage.setItem('bioinf_game_best', v) }
-    function getBest(){ return localStorage.getItem('bioinf_game_best') }
-    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
-
-    function buildDeck(){
-      const deck=[];
-      PAIRS.forEach((p,i)=>{
-        const [concept, explanation]=p;
-        deck.push({ id:`${i}-C`, pair:i, kind:'concept', color:'red', text:concept });
-        deck.push({ id:`${i}-E`, pair:i, kind:'explanation', color:'blue', text:explanation });
-      });
-      return shuffle(deck);
-    }
-
-    function render(){
-      grid.innerHTML='';
-      const deck = buildDeck();
-      total = PAIRS.length; pairs=0; turns=0; first=null; lock=false;
-      turnsEl.textContent=turns; pairsEl.textContent=pairs; totalEl.textContent=total; bestEl.textContent=getBest()||'—';
-
-      deck.forEach(card=>{
-        const c=document.createElement('button');
-        c.className='card';
-        c.setAttribute('aria-label','Card');
-        c.dataset.pair=card.pair; c.dataset.color=card.color; c.dataset.kind=card.kind;
-        c.innerHTML = `
-          <div class="back">Bioinformatika</div>
-          <div class="face">
-            <div>
-              <div class="pill ${card.color==='red'?'red':'blue'}">${card.kind==='concept'?'Concept':'Explanation'}</div>
-              <div class="txt">${card.text}</div>
+        <!-- Scoreboard -->
+        <div class="flex justify-around items-center bg-white p-4 rounded-xl shadow-md mb-6">
+            <div class="text-center">
+                <p class="text-slate-500 text-sm">Turns</p>
+                <p id="turns" class="text-3xl font-bold text-slate-800">0</p>
             </div>
-          </div>`;
-        c.addEventListener('click', ()=> onFlip(c));
-        grid.appendChild(c);
-      });
-    }
+            <div class="text-center">
+                <p class="text-slate-500 text-sm">Pairs Found</p>
+                <p id="score" class="text-3xl font-bold text-slate-800">0 / 8</p>
+            </div>
+            <div class="text-center">
+                <p class="text-slate-500 text-sm">Trophies</p>
+                <div id="trophies" class="flex text-3xl space-x-2"></div>
+            </div>
+        </div>
 
-    function onFlip(card){
-      if(lock || card.classList.contains('flipped')) return;
-      card.classList.add('flipped');
-      if(!first){ first=card; return; }
-      turns++; turnsEl.textContent=turns; lock=true;
-      const match = first.dataset.pair===card.dataset.pair && first!==card;
-      if(match){
-        setTimeout(()=>{
-          first.style.pointerEvents='none';
-          card.style.pointerEvents='none';
-          first=null; lock=false; pairs++; pairsEl.textContent=pairs; maybeWin();
-        }, 350);
-      }else{
-        setTimeout(()=>{ first.classList.remove('flipped'); card.classList.remove('flipped'); first=null; lock=false; }, 800);
-      }
-    }
+        <!-- Game Board -->
+        <div id="game-board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </div>
 
-    function maybeWin(){
-      if(pairs===total){
-        el('#finalTurns').textContent = turns;
-        const best=getBest(); if(!best || turns < +best){ saveBest(turns) }
-        winDlg.showModal();
-      }
-    }
+    <!-- Win Modal -->
+    <div id="win-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 text-center max-w-md w-full transform transition-all scale-95 opacity-0">
+            <div id="modal-trophy" class="text-8xl mb-4"></div>
+            <h2 id="modal-title" class="text-4xl font-bold text-slate-800 mb-2">Excellent!</h2>
+            <p id="modal-message" class="text-slate-600 mb-6 text-lg"></p>
+            <button id="restart-game-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-transform transform hover:scale-105 shadow-lg">
+                Play Again
+            </button>
+        </div>
+    </div>
 
-    // UI hooks
-    el('#newGameBtn').addEventListener('click', render);
-    el('#againBtn')?.addEventListener('click', ()=>{ winDlg.close(); render(); });
-    el('#howBtn').addEventListener('click', ()=> howDlg.showModal());
-    el('#closeHow').addEventListener('click', ()=> howDlg.close());
-    window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='r') render(); if(e.key.toLowerCase()==='h') (howDlg.open?howDlg.close():howDlg.showModal()); });
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const gameBoard = document.getElementById('game-board');
+        const turnsEl   = document.getElementById('turns');
+        const scoreEl   = document.getElementById('score');
+        const trophiesEl= document.getElementById('trophies');
+        const winModal  = document.getElementById('win-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalTrophy  = document.getElementById('modal-trophy');
+        const modalTitle   = document.getElementById('modal-title');
+        const restartGameBtn = document.getElementById('restart-game-btn');
+        const startGameBtn   = document.getElementById('start-game-btn');
+        const startScreen    = document.getElementById('start-screen');
+        const gameContainer  = document.getElementById('game-container');
 
-    render();
-  </script>
+        // ——— Concept ↔ Explanation bank (edit/extend freely) ———
+        const allPairs = [
+            { concept: { text: 'RMSD (Root-Mean-Square Deviation)' }, explanation: { text: 'Average displacement from a reference across time; quick stability check for MD.' } },
+            { concept: { text: 'RMSF (Root-Mean-Square Fluctuation)' }, explanation: { text: 'Per-residue flexibility across a trajectory; finds mobile vs rigid regions.' } },
+            { concept: { text: 'Radius of gyration (Rg)' }, explanation: { text: 'Mass-weighted compactness; lower Rg → compaction.' } },
+            { concept: { text: 'SASA (Solvent Accessible Surface Area)' }, explanation: { text: 'Surface area accessible to solvent; tracks burial/exposure in folding or binding.' } },
+            { concept: { text: 'Hydrogen-bond analysis' }, explanation: { text: 'Counts/persistence of donor–acceptor H-bonds; supports binding stability.' } },
+            { concept: { text: 'MM/PBSA or MM/GBSA' }, explanation: { text: 'End-point ΔG_bind estimate from MD snapshots; best for ranking, not absolute values.' } },
+            { concept: { text: 'Docking score' }, explanation: { text: 'Empirical/knowledge-based proxy for affinity; compare poses/ligands (not true ΔG).' } },
+            { concept: { text: 'Docking pose validation' }, explanation: { text: 'Check key interactions; run short MD to assess pose stability before conclusions.' } },
+            { concept: { text: 'Force field (AMBER/CHARMM)' }, explanation: { text: 'Parameterized functional forms for bonded & nonbonded terms used in MD.' } },
+            { concept: { text: 'Water model (TIP3P/TIP4P...)' }, explanation: { text: 'Fixed-geometry models defining solvent behavior; affects dynamics/energetics.' } },
+            { concept: { text: 'PME (Particle Mesh Ewald)' }, explanation: { text: 'Efficient long-range electrostatics under periodic boundary conditions.' } },
+            { concept: { text: 'Periodic boundary conditions (PBC)' }, explanation: { text: 'Tile the box infinitely to avoid edge artifacts.' } },
+            { concept: { text: 'Cutoff distance' }, explanation: { text: 'Real-space truncation for nonbonded interactions before reciprocal-space treatment.' } },
+            { concept: { text: 'Thermostat (e.g., Langevin)' }, explanation: { text: 'Controls temperature by coupling the system to a heat bath.' } },
+            { concept: { text: 'Barostat (e.g., Parrinello–Rahman)' }, explanation: { text: 'Controls pressure to sample the NPT ensemble.' } },
+            { concept: { text: 'Equilibration vs Production' }, explanation: { text: 'Relax to target T/P, then collect data once properties stabilize.' } },
+            { concept: { text: 'Convergence checks' }, explanation: { text: 'Ensure observables plateau with no consistent drift (RMSD, energy, Rg, etc.).' } },
+            { concept: { text: 'PCA (Essential Dynamics)' }, explanation: { text: 'Extract dominant collective motions (eigenvectors/eigenvalues).' } },
+            { concept: { text: 'Free Energy Landscape (FEL)' }, explanation: { text: 'Project states on reaction coordinates to map minima/basins.' } },
+            { concept: { text: 'Clustering of MD frames' }, explanation: { text: 'Group similar conformations to find representative states & populations.' } }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let turns = 0;
+        let lockBoard = false;
+        const pairsPerGame = 8; // show 8 random concept↔explanation pairs per game
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function createCardElement(cardInfo) {
+            const card = document.createElement('div');
+            card.className = 'card h-40 sm:h-48 perspective-container cursor-pointer';
+            card.dataset.matchId = cardInfo.matchId;
+            card.dataset.type = cardInfo.type;
+
+            const cardInner = document.createElement('div');
+            cardInner.className = 'card-inner';
+
+            const cardFront = document.createElement('div');
+            const cardBack  = document.createElement('div');
+
+            cardFront.className = 'card-face card-front font-semibold text-lg';
+            cardBack.className  = 'card-face card-back font-bold text-white text-2xl';
+
+            if (cardInfo.type === 'concept') {
+                cardFront.classList.add('bg-red-100','text-red-800','border-2','border-red-300');
+                cardBack.classList.add('bg-red-500');
+                cardBack.innerHTML = '<span class="pill pill-red">Concept</span>';
+            } else {
+                cardFront.classList.add('bg-blue-100','text-blue-800','border-2','border-blue-300');
+                cardBack.classList.add('bg-blue-500');
+                cardBack.innerHTML = '<span class="pill pill-blue">Explanation</span>';
+            }
+
+            // Front (revealed side when flipped)
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex flex-col items-center';
+            const pill = document.createElement('div');
+            pill.className = 'pill ' + (cardInfo.type === 'concept' ? 'pill-red' : 'pill-blue');
+            pill.textContent = cardInfo.type === 'concept' ? 'Concept' : 'Explanation';
+            const text = document.createElement('div');
+            text.textContent = cardInfo.text;
+            wrapper.appendChild(pill);
+            wrapper.appendChild(text);
+            cardFront.appendChild(wrapper);
+
+            cardInner.appendChild(cardFront);
+            cardInner.appendChild(cardBack);
+            card.appendChild(cardInner);
+            card.addEventListener('click', () => handleCardClick(card));
+            return card;
+        }
+
+        function initGame() {
+            // Reset state
+            matchedPairs = 0; turns = 0; lockBoard = false; flippedCards = [];
+            gameBoard.innerHTML = '';
+            scoreEl.textContent = `${matchedPairs} / ${pairsPerGame}`;
+            turnsEl.textContent = turns;
+            winModal.classList.add('hidden'); winModal.classList.remove('flex');
+            winModal.querySelector('div').classList.add('scale-95','opacity-0');
+            trophiesEl.innerHTML = '';
+
+            // Select random pairs
+            shuffle(allPairs);
+            const pairsForThisGame = allPairs.slice(0, pairsPerGame);
+
+            // Build flat deck
+            const cardData = [];
+            pairsForThisGame.forEach((pair, idx) => {
+                const matchId = idx + 1;
+                cardData.push({ type:'concept',     text: pair.concept.text,     matchId });
+                cardData.push({ type:'explanation', text: pair.explanation.text, matchId });
+            });
+
+            shuffle(cardData);
+            cardData.forEach(info => gameBoard.appendChild(createCardElement(info)));
+        }
+
+        function handleCardClick(card) {
+            if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+            card.classList.add('flipped');
+            flippedCards.push(card);
+            if (flippedCards.length === 2) checkForMatch();
+        }
+
+        function checkForMatch() {
+            lockBoard = true;
+            turns++; turnsEl.textContent = turns;
+            const [a,b] = flippedCards;
+            const isMatch = a.dataset.matchId === b.dataset.matchId && a.dataset.type !== b.dataset.type;
+            if (isMatch) disableCards(); else unflipCards();
+        }
+
+        function disableCards() {
+            flippedCards.forEach(c => c.classList.add('matched'));
+            matchedPairs++; scoreEl.textContent = `${matchedPairs} / ${pairsPerGame}`;
+            resetBoard();
+            if (matchedPairs === pairsPerGame) setTimeout(showWinModal, 500);
+        }
+
+        function unflipCards() {
+            setTimeout(() => {
+                flippedCards.forEach(c => c.classList.remove('flipped'));
+                resetBoard();
+            }, 900);
+        }
+
+        function resetBoard() { [flippedCards, lockBoard] = [[], false]; }
+
+        function showWinModal() {
+            let trophyHTML = '';
+            let title = '';
+            let message = `You matched all concepts and explanations in ${turns} turns!`;
+
+            if (turns <= 12) { trophyHTML = '<span class="trophy-gold">🏆</span>'; title = 'Gold!'; message += ' Outstanding mastery!'; }
+            else if (turns <= 18) { trophyHTML = '<span class="trophy-silver">🥈</span>'; title = 'Silver!'; message += ' Great job—sharp thinking!'; }
+            else { trophyHTML = '<span class="trophy-bronze">🥉</span>'; title = 'Bronze!'; message += ' Well done—keep practicing!'; }
+
+            modalTrophy.innerHTML = trophyHTML;
+            modalTitle.textContent = title;
+            modalMessage.textContent = `Bioinformatika congratulates you. ${message}`;
+            trophiesEl.innerHTML += trophyHTML;
+
+            winModal.classList.remove('hidden'); winModal.classList.add('flex');
+            setTimeout(() => { winModal.querySelector('div').classList.remove('scale-95','opacity-0'); }, 10);
+        }
+
+        // Events
+        startGameBtn.addEventListener('click', () => { startScreen.classList.add('hidden'); gameContainer.classList.remove('hidden'); initGame(); });
+        restartGameBtn.addEventListener('click', initGame);
+    });
+    </script>
 </body>
 </html>
