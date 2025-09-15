@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PharmGame — Diuretics Match</title>
+  <title>Bioinformatika — Concept Matching Game</title>
   <style>
     :root{
-      --bg:#0f172a;/* slate-900 */
-      --card:#111827cc;/* gray-900/80 */
-      --accent:#22d3ee;/* cyan-400 */
-      --accent2:#a78bfa;/* violet-400 */
-      --muted:#94a3b8;/* slate-400 */
-      --ok:#22c55e;/* green-500 */
-      --bad:#ef4444;/* red-500 */
+      --bg:#0f172a;
+      --card:#111827cc;
+      --accent:#22d3ee;
+      --accent2:#a78bfa;
+      --muted:#94a3b8;
+      --ok:#22c55e;
+      --bad:#ef4444;
       --gold:#d4af37;
       --shadow:0 20px 40px rgba(0,0,0,.35);
       --radius:22px;
@@ -59,8 +59,8 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>PharmGame — Diuretics Quest</h1>
-        <div class="sub">Match <b>drug/class</b> cards with their correct <b>MOA / use / adverse effect</b>. Fewer turns = higher score.</div>
+        <h1>Bioinformatika — Concept Matching Game</h1>
+        <div class="sub">Match <b>Concept</b> cards with their correct <b>Explanation</b>. Topic: <b>Molecular Modeling & Computational Biology</b>. Fewer turns = higher score.</div>
       </div>
     </div>
     <div>
@@ -82,18 +82,17 @@
 
     <section class="panel">
       <div id="grid" class="grid" aria-label="Game board"></div>
-      <div class="footer">Tip: Use this template for any topic (e.g., antimicrobials, autonomics). Edit the <code>DATA</code> array below only.</div>
+      <div class="footer">Tip: Edit the <code>DATA</code> array below to create your own concept-explanation pairs.</div>
     </section>
   </main>
 
   <dialog id="howDlg">
     <div class="dlg">
       <h2>How to Play</h2>
-      <p>Red cards are <b>drug names or classes</b>. Blue cards describe a <b>mechanism, use, or adverse effect</b>. Flip two cards to find a correct pair. All sets are randomized each game.</p>
+      <p>Red cards are <b>Concepts</b>. Blue cards contain the <b>Explanation</b>. Flip two cards to find a correct pair. Correct matches remain visible.</p>
       <ul>
         <li><b>Turns</b> count every two flips.</li>
         <li><b>Best</b> is saved locally per device.</li>
-        <li>Keyboard: <kbd>R</kbd> to restart, <kbd>H</kbd> for help.</li>
       </ul>
       <p style="margin-top:10px"><button class="btn" id="closeHow">Got it</button></p>
     </div>
@@ -101,27 +100,39 @@
 
   <dialog id="winDlg">
     <div class="dlg" style="text-align:center">
-      <div class="trophy">🏅 <span class="gold">Excellent!</span></div>
-      <p>You matched all pairs in <b><span id="finalTurns">0</span> turns</b>.</p>
+      <div class="trophy">🎉 <span class="gold">Congratulations!</span></div>
+      <p>You matched all concept–explanation pairs in <b><span id="finalTurns">0</span> turns</b>.</p>
+      <p><em>Great job — keep going, you are mastering the material!</em></p>
       <p><button class="btn" id="againBtn">Play Again</button></p>
     </div>
   </dialog>
 
   <script>
-    // ======== CONTENT (Edit me) ========
-    // Each item becomes ONE pair: {front: "red card", back: "blue card"}
+    // ======== CONTENT ========
     const DATA = [
-      { front: "Loop diuretics (e.g., Furosemide)", back: "Inhibit NKCC2 in thick ascending limb → ↑ Na⁺/K⁺/Cl⁻ excretion; AE: ototoxicity, hypokalemic alkalosis" },
-      { front: "Thiazides (e.g., Hydrochlorothiazide)", back: "Inhibit NCC in distal convoluted tubule; ↑ Ca²⁺ reabsorption; use: HTN, nephrogenic DI" },
-      { front: "Potassium-sparing: Spironolactone", back: "Aldosterone receptor antagonist in collecting duct; AE: gynecomastia, hyperkalemia" },
-      { front: "Potassium-sparing: Amiloride", back: "ENaC blocker in collecting duct; use: lithium-induced DI; AE: hyperkalemia" },
-      { front: "Carbonic anhydrase inhibitor (Acetazolamide)", back: "↓ HCO₃⁻ reabsorption in PCT; use: glaucoma, altitude sickness; AE: metabolic acidosis" },
-      { front: "Osmotic diuretic (Mannitol)", back: "Osmotically holds water in tubule; use: ↑ ICP/IOP; CI: CHF, pulmonary edema" },
-      { front: "Vaptans (Tolvaptan)", back: "V₂ receptor antagonist → aquaresis; use: SIADH; monitor liver toxicity" },
-      { front: "Ethacrynic acid", back: "Loop-like (no sulfa) for sulfa allergy; higher ototoxicity risk" }
+      { front: "RMSD (Root-Mean-Square Deviation)", back: "Measures average displacement of a structure from a reference over time; used to assess MD stability" },
+      { front: "RMSF (Root-Mean-Square Fluctuation)", back: "Per-residue flexibility metric across a trajectory; highlights mobile vs rigid regions" },
+      { front: "Radius of gyration (Rg)", back: "Mass-weighted compactness of a molecule; lower Rg often indicates compaction" },
+      { front: "Hydrogen-bond analysis", back: "Counts/persistence of donor–acceptor H-bonds; supports binding stability interpretation" },
+      { front: "SASA (Solvent Accessible Surface Area)", back: "Surface area accessible to solvent probe; relates to burial/exposure during folding or binding" },
+      { front: "MM/PBSA or MM/GBSA", back: "End-point free energy estimates from MD snapshots; approximates binding free energy (ΔGbind)" },
+      { front: "Docking score", back: "Empirical/knowledge-based scoring proxy for affinity; useful for ranking but not absolute ΔG" },
+      { front: "Docking pose", back: "Predicted ligand orientation within binding site; validated by interactions and MD" },
+      { front: "Force field (e.g., AMBER/CHARMM)", back: "Parameterized functional form describing bonded and nonbonded interactions in simulations" },
+      { front: "Water model (e.g., TIP3P)", back: "Simplified representation of water with fixed geometry and charges for MD" },
+      { front: "PME (Particle Mesh Ewald)", back: "Algorithm to compute long-range electrostatics efficiently with periodic boundary conditions" },
+      { front: "Periodic boundary conditions (PBC)", back: "Simulate a small box as if tiled infinitely to avoid edge artifacts" },
+      { front: "Cutoff distance", back: "Real-space truncation for nonbonded interactions before reciprocal-space treatment" },
+      { front: "Thermostat (e.g., Langevin)", back: "Controls system temperature by coupling to a heat bath" },
+      { front: "Barostat (e.g., Parrinello–Rahman)", back: "Controls system pressure to sample NPT ensemble" },
+      { front: "Equilibration vs Production", back: "Initial relaxation of system to target T/P, then data collection with stable properties" },
+      { front: "Convergence check", back: "Assess whether observables (RMSD, energy) plateau and results no longer drift" },
+      { front: "Principal Component Analysis (PCA)", back: "Reduces trajectory to dominant collective motions (eigenvectors/eigenvalues)" },
+      { front: "Free Energy Landscape (FEL)", back: "Maps states via reaction coordinates (e.g., PC1/PC2) to identify basins/minima" },
+      { front: "Clustering of MD frames", back: "Groups similar conformations to find representative states and populations" }
     ];
 
-    // ======== Engine (No need to edit below) ========
+    // ======== Engine ========
     const el = sel => document.querySelector(sel);
     const grid = el('#grid');
     const turnsEl = el('#turns');
@@ -133,8 +144,8 @@
 
     let first=null, lock=false, turns=0, pairs=0, total=DATA.length;
 
-    function saveBest(v){ localStorage.setItem('pharmgame_best', v) }
-    function getBest(){ return localStorage.getItem('pharmgame_best') }
+    function saveBest(v){ localStorage.setItem('bioinformatika_best', v) }
+    function getBest(){ return localStorage.getItem('bioinformatika_best') }
 
     function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
 
@@ -157,10 +168,10 @@
         const c=document.createElement('button');
         c.className='card'; c.setAttribute('aria-label','Card'); c.dataset.pair=card.pair; c.dataset.color=card.color;
         c.innerHTML = `
-          <div class="back">Pharm<span style="color:var(--accent)">Game</span></div>
+          <div class="back">Bio<span style="color:var(--accent)">informatika</span></div>
           <div class="face">
             <div>
-              <div class="pill ${card.color==='red'?'red':'blue'}">${card.color==='red'?'Drug/Class':'MOA/Use/AE'}</div>
+              <div class="pill ${card.color==='red'?'red':'blue'}">${card.color==='red'?'Concept':'Explanation'}</div>
               <div class="txt">${card.text}</div>
             </div>
           </div>`;
@@ -176,15 +187,15 @@
       if(lock || card.classList.contains('flipped')) return;
       card.classList.add('flipped');
       if(!first){ first=card; return; }
-      // second flip
       turns++; turnsEl.textContent=turns;
       lock=true;
       const match = first.dataset.pair===card.dataset.pair && first!==card;
       if(match){
         pairs++; pairsEl.textContent=pairs;
         setTimeout(()=>{
-          first.style.visibility='hidden';
-          card.style.visibility='hidden';
+          // Keep matched cards face-up and disable further clicks
+          first.style.pointerEvents='none';
+          card.style.pointerEvents='none';
           first=null; lock=false; maybeWin();
         }, 420);
       }else{
@@ -205,29 +216,13 @@
       }
     }
 
-    // UI hooks
     el('#newGameBtn').addEventListener('click', render);
     el('#againBtn').addEventListener('click', ()=>{ winDlg.close(); render(); });
     el('#howBtn').addEventListener('click', ()=> howDlg.showModal());
     el('#closeHow').addEventListener('click', ()=> howDlg.close());
-    window.addEventListener('keydown', e=>{
-      if(e.key.toLowerCase()==='r') render();
-      if(e.key.toLowerCase()==='h') howDlg.open? howDlg.close(): howDlg.showModal();
-    });
 
-    // Kick-off
     render();
   </script>
-
-  <!--
-  =====================
-  Deployment (GitHub Pages)
-  1) Create a new public repo, e.g., pharmgame-diuretics
-  2) Add this file as index.html and commit
-  3) In repo Settings → Pages → Source = main branch (/(root)) → Save
-  4) Your site will be live at: https://<username>.github.io/pharmgame-diuretics
-  Edit the DATA array to change topics (ACE inhibitors, autonomics, etc.)
-  =====================
-  -->
 </body>
 </html>
+
